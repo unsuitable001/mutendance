@@ -4,7 +4,7 @@ import 'package:mutendance/core/storage.dart';
 
 Future showRollForm(BuildContext context) async {
   final fromTextController =
-      TextEditingController.fromValue(TextEditingValue(text: '0'));
+      TextEditingController.fromValue(TextEditingValue(text: '1'));
   final toTextController =
       TextEditingController.fromValue(TextEditingValue(text: '100'));
   final storage = await Storage.getInstance();

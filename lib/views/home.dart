@@ -15,10 +15,25 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
+  final storageFuture = Storage.getInstance();
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  FloatingActionButton _addStudentsFAB(BuildContext context) {
+    return FloatingActionButton(
+      onPressed: () {
+        showRollForm(context).then((_) {
+          this.setState(() {});
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('New roll number range added.')));
+        });
+      },
+      tooltip: 'Add new students',
+      child: Icon(Icons.add),
+    );
   }
 
   @override
@@ -42,7 +57,7 @@ class _HomePageState extends State<HomePage> {
         onTap: (index) => _onItemTapped(index),
       ),
       body: FutureBuilder<Storage>(
-          future: Storage.getInstance(),
+          future: storageFuture,
           builder: (context, snapshot) {
             return snapshot.hasData
                 ? IndexedStack(
@@ -54,17 +69,7 @@ class _HomePageState extends State<HomePage> {
                   )
                 : CircularProgressIndicator();
           }),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showRollForm(context).then((_) {
-            this.setState(() {});
-            ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('New roll number range added.')));
-          });
-        },
-        tooltip: 'Add new students',
-        child: Icon(Icons.add),
-      ),
+      floatingActionButton: _addStudentsFAB(context),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }

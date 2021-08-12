@@ -27,7 +27,6 @@ class StudentListItemState extends State<StudentListItem> {
                 ? !(value ?? true)
                 : value ?? false;
           });
-          print(student.isPresent);
         });
   }
 }

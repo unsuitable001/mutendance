@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class Storage {
   static final _storage = Storage._internal();
   static SharedPreferences? _sharedPreferences;
+  static List<bool> attendance = [];
 
   /// Loads data from [SharedPreferences] and provides an unified API over it.
   static Future<Storage> getInstance() async {

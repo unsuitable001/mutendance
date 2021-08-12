@@ -36,10 +36,12 @@ class _AttendancePageState extends State<AttendancePage> {
           Expanded(
               child: ListView.builder(
             padding: new EdgeInsets.symmetric(vertical: 8.0),
-            itemCount: widget.storage.rollRBound - widget.storage.rollLBound,
+            itemCount:
+                widget.storage.rollRBound - widget.storage.rollLBound + 1,
             itemBuilder: (context, position) {
+              Storage.attendance.add(widget.storage.isAbsentsOnly);
               return StudentListItem(
-                  Student(position, widget.storage.isAbsentsOnly),
+                  Student(position + widget.storage.rollLBound, widget.storage),
                   widget.storage);
             },
           )),
