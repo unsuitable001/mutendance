@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mutendance/core/excel_handler.dart';
+import 'package:mutendance/core/storage.dart';
+import 'package:mutendance/views/components/new_roll_form.dart';
 import 'records.dart';
 import 'attendance.dart';
 
@@ -14,14 +15,11 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
-
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
-
-  final _screens = <Widget>[AttendancePage(), RecordsPage()];
 
   @override
   Widget build(BuildContext context) {
@@ -43,16 +41,27 @@ class _HomePageState extends State<HomePage> {
         currentIndex: _selectedIndex,
         onTap: (index) => _onItemTapped(index),
       ),
-      body: FutureBuilder(
-          future: getStudentsData(),
+      body: FutureBuilder<Storage>(
+          future: Storage.getInstance(),
           builder: (context, snapshot) {
-            return IndexedStack(
-              children: _screens,
-              index: _selectedIndex,
-            );
+            return snapshot.hasData
+                ? IndexedStack(
+                    children: <Widget>[
+                      AttendancePage(snapshot.data!),
+                      RecordsPage()
+                    ],
+                    index: _selectedIndex,
+                  )
+                : CircularProgressIndicator();
           }),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => null,
+        onPressed: () {
+          showRollForm(context).then((_) {
+            this.setState(() {});
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('New roll number range added.')));
+          });
+        },
         tooltip: 'Add new students',
         child: Icon(Icons.add),
       ),

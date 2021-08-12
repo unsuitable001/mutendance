@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:mutendance/core/storage.dart';
 import 'package:mutendance/model/student.dart';
 import 'package:mutendance/views/components/student.dart';
 
 class AttendancePage extends StatefulWidget {
+  final Storage storage;
+  const AttendancePage(this.storage);
   @override
   State<StatefulWidget> createState() => _AttendancePageState();
 }
@@ -20,15 +23,24 @@ class _AttendancePageState extends State<AttendancePage> {
           ),
           SwitchListTile(
             title: Text('Mark Absents Only'),
-            onChanged: null,
-            value: true,
+            onChanged: (value) =>
+                widget.storage.setAbsentsOnly(value).then((value) => {
+                      this.setState(() {}),
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text('You will now mark '
+                              '${widget.storage.isAbsentsOnly ? "absent" : "present"}'
+                              ' students only.')))
+                    }),
+            value: widget.storage.isAbsentsOnly,
           ),
           Expanded(
               child: ListView.builder(
             padding: new EdgeInsets.symmetric(vertical: 8.0),
-            itemCount: 200,
+            itemCount: widget.storage.rollRBound - widget.storage.rollLBound,
             itemBuilder: (context, position) {
-              return StudentListItem(Student(position, false));
+              return StudentListItem(
+                  Student(position, widget.storage.isAbsentsOnly),
+                  widget.storage);
             },
           )),
         ],
